@@ -1,0 +1,22 @@
+module out(
+    input clk,
+    input rst,
+
+    input  [31:0] result_in,
+    input         valid_in,
+
+    output reg [31:0] final_result,
+    output reg        final_valid
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        final_result <= 32'd0;
+        final_valid  <= 1'b0;
+    end else begin
+        final_result <= result_in;
+        final_valid  <= valid_in;
+    end
+end
+
+endmodule
