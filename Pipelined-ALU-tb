@@ -1,0 +1,80 @@
+`timescale 1ns/1ps
+
+module alu_clock_gated_tb;
+
+reg clk;
+reg rst;
+reg enable;
+reg [31:0] A;
+reg [31:0] B;
+reg [2:0] sel;
+
+wire [31:0] Y;
+
+// Instantiate DUT
+alu_clock_gated DUT (
+    .clk(clk),
+    .rst(rst),
+    .enable(enable),
+    .A(A),
+    .B(B),
+    .sel(sel),
+    .Y(Y)
+);
+
+
+// Clock generation (10ns period)
+always #5 clk = ~clk;
+
+initial
+begin
+
+    // Initialize signals
+    clk = 0;
+    rst = 1;
+    enable = 0;
+    A = 0;
+    B = 0;
+    sel = 0;
+
+    // Reset pulse
+    #10 rst = 0;
+
+    // Enable clock
+    #10 enable = 1;
+
+    // Test Case 1
+    A = 7;
+    B = 2;
+    sel = 3'b000;   // Example operation
+    #20;
+
+    // Test Case 2
+    A = 10;
+    B = 5;
+    sel = 3'b001;
+    #20;
+
+    // Test Case 3
+    A = 15;
+    B = 3;
+    sel = 3'b010;
+    #20;
+
+    // Disable clock (clock gating test)
+    enable = 0;
+    A = 20;
+    B = 4;
+    sel = 3'b011;
+    #20;
+
+    // Enable again
+    enable = 1;
+    sel = 3'b100;
+    #20;
+
+    $finish;
+
+end
+
+endmodule
